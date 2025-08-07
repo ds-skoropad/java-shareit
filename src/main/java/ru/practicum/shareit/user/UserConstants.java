@@ -1,9 +1,12 @@
 package ru.practicum.shareit.user;
 
-public interface UserConstants {
+public final class UserConstants {
 
     // DTO restrictions
-    int NAME_SIZE_MIN = 4;
-    int NAME_SIZE_MAX = 20;
-    int EMAIL_SIZE_MAX = 200;
+    public static final int NAME_SIZE_MIN = 4;
+    public static final int NAME_SIZE_MAX = 20;
+    public static final int EMAIL_SIZE_MAX = 200;
+
+    private UserConstants() {
+    }
 }

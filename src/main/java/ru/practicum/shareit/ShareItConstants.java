@@ -1,6 +1,9 @@
 package ru.practicum.shareit;
 
-public interface ShareItConstants {
+public final class ShareItConstants {
     // HTTP request
-    String REQ_HEAD_USER_ID = "X-Sharer-User-Id";
+    public static final String REQ_HEAD_USER_ID = "X-Sharer-User-Id";
+
+    private ShareItConstants() {
+    }
 }
