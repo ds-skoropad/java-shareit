@@ -6,9 +6,9 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class Item {
-    Integer id;
-    String name;
-    String description;
-    boolean available;
-    Integer ownerId;
+    private Integer id;
+    private String name;
+    private String description;
+    private boolean available;
+    private Integer ownerId;
 }
