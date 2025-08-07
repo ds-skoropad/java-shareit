@@ -2,22 +2,17 @@ package ru.practicum.shareit.item;
 
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class ItemRepositoryInMemory implements ItemRepository {
     private final Map<Integer, Item> items = new HashMap<>();
-    private Integer nextId = 1;
-
+    private final Map<Integer, List<Item>> itemsByUserId = new HashMap<>();
+    private int nextId = 1;
 
     @Override
     public List<Item> findAllByUserId(Integer userId) {
-        return items.values().stream()
-                .filter(item -> item.getOwnerId().equals(userId))
-                .toList();
+        return itemsByUserId.get(userId);
     }
 
     @Override
@@ -30,7 +25,6 @@ public class ItemRepositoryInMemory implements ItemRepository {
                 .toList();
     }
 
-
     @Override
     public Optional<Item> findById(Integer id) {
         return Optional.ofNullable(items.get(id));
@@ -39,12 +33,13 @@ public class ItemRepositoryInMemory implements ItemRepository {
     @Override
     public Item save(Item item) {
         if (item.getId() == null) {
-            item.setId(nextId);
-            items.put(nextId, item);
-            nextId++;
-        } else {
-            items.put(item.getId(), item);
+            item.setId(nextId++);
         }
+        items.put(item.getId(), item);
+        List<Item> userItems = itemsByUserId.containsKey(item.getOwnerId()) ?
+                itemsByUserId.get(item.getOwnerId()) : new ArrayList<>();
+        userItems.add(item);
+        itemsByUserId.put(item.getOwnerId(), userItems);
         return item;
     }
 
@@ -55,6 +50,9 @@ public class ItemRepositoryInMemory implements ItemRepository {
 
     @Override
     public void deleteByUserId(Integer userId) {
-        items.values().removeIf(item -> item.getOwnerId().equals(userId));
+        if (itemsByUserId.containsKey(userId)) {
+            itemsByUserId.get(userId).forEach(item -> items.remove(item.getId()));
+            itemsByUserId.remove(userId);
+        }
     }
 }
