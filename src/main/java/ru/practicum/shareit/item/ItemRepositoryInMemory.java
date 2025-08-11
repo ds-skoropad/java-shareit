@@ -12,7 +12,9 @@ public class ItemRepositoryInMemory implements ItemRepository {
 
     @Override
     public List<Item> findAllByUserId(Integer userId) {
-        return itemsByUserId.get(userId);
+        return itemsByUserId.getOrDefault(userId, List.of()).stream()
+                .map(this::getItemClone)
+                .toList();
     }
 
     @Override
@@ -22,12 +24,14 @@ public class ItemRepositoryInMemory implements ItemRepository {
                         item.isAvailable() && (item.getName().toUpperCase().contains(text)
                                 || item.getDescription().toUpperCase().contains(text))
                 )
+                .map(this::getItemClone)
                 .toList();
     }
 
     @Override
     public Optional<Item> findById(Integer id) {
-        return Optional.ofNullable(items.get(id));
+        Item item = items.get(id);
+        return Optional.ofNullable(item == null ? null : getItemClone(item));
     }
 
     @Override
@@ -36,16 +40,16 @@ public class ItemRepositoryInMemory implements ItemRepository {
             item.setId(nextId++);
         }
         items.put(item.getId(), item);
-        List<Item> userItems = itemsByUserId.containsKey(item.getOwnerId()) ?
-                itemsByUserId.get(item.getOwnerId()) : new ArrayList<>();
-        userItems.add(item);
-        itemsByUserId.put(item.getOwnerId(), userItems);
-        return item;
+        itemsByUserId.computeIfAbsent(item.getOwnerId(), k -> new ArrayList<>()).add(item);
+        return getItemClone(item);
     }
 
     @Override
     public void deleteById(Integer id) {
-        items.remove(id);
+        if (items.containsKey(id)) {
+            itemsByUserId.remove(items.get(id).getOwnerId());
+            items.remove(id);
+        }
     }
 
     @Override
@@ -54,5 +58,15 @@ public class ItemRepositoryInMemory implements ItemRepository {
             itemsByUserId.get(userId).forEach(item -> items.remove(item.getId()));
             itemsByUserId.remove(userId);
         }
+    }
+
+    private Item getItemClone(Item item) {
+        return new Item(
+                item.getId(),
+                item.getName(),
+                item.getDescription(),
+                item.isAvailable(),
+                item.getOwnerId()
+        );
     }
 }

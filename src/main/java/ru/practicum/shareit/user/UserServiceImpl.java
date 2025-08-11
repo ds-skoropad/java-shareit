@@ -3,7 +3,6 @@ package ru.practicum.shareit.user;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.ConflictException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.user.dto.UserCreateDto;
@@ -35,9 +34,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto createUser(UserCreateDto userCreateDto) {
-        if (userRepository.findByEmail(userCreateDto.email()).isPresent()) {
-            throw new ConflictException("Email is taken");
-        }
         User createUser = userRepository.save(UserMapper.toUser(userCreateDto));
         log.info("Create user: {}", createUser);
         return UserMapper.toUserResponseDto(createUser);
@@ -47,9 +43,6 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto updateUser(UserUpdateDto userUpdateDto) {
         User updateUser = userRepository.findById(userUpdateDto.id())
                 .orElseThrow(() -> new NotFoundException(String.format("User not found: id = %d", userUpdateDto.id())));
-        if (userUpdateDto.email() != null && userRepository.findByEmail(userUpdateDto.email()).isPresent()) {
-            throw new ConflictException("Email is taken");
-        }
         UserMapper.updateUser(updateUser, userUpdateDto);
         updateUser = userRepository.save(updateUser);
         log.info("Update user: {}", updateUser);
