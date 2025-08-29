@@ -1,0 +1,82 @@
+spring:
+  profiles:
+    active: production
+---
+# DEVELOPMENT
+spring:
+  config:
+    activate:
+      on-profile: development
+  main:
+    log-startup-info: true
+    banner-mode: off
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+  sql:
+    init:
+      mode: always # init src/main/resources schema.sql, data.sql
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:shareit
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+
+logging:
+  level:
+    org:
+      zalando:
+        logbook: TRACE # view HTTP-request
+    ru:
+      yandex:
+        practicum:
+          shareit: TRACE
+---
+# PRODUCTION
+spring:
+  config:
+    activate:
+      on-profile: production
+  main:
+    log-startup-info: false
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+  sql:
+    init:
+      mode: always # init src/main/resources schema.sql, data.sql
+  datasource:
+    url: jdbc:postgresql://localhost:5432/shareit
+    driverClassName: org.postgresql.Driver
+    username: sa
+    password: password
+---
+# TEST
+spring:
+  config:
+    activate:
+      on-profile: test
+  main:
+    log-startup-info: false
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+  sql:
+    init:
+      mode: always # init src/main/resources schema.sql, data.sql  datasource:
+    url: jdbc:h2:mem:shareit
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
