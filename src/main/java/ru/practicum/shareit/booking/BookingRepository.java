@@ -1,6 +1,8 @@
 package ru.practicum.shareit.booking;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,4 +39,18 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     Optional<Booking> findFirstByItemIdAndStartAfterOrderByStartAsc(Integer itemId, LocalDateTime now);
 
     List<Booking> findByItemIdInAndStatus(List<Integer> itemIds, BookingStatus status);
+
+    @Query("""
+            SELECT CASE WHEN COUNT(b) > 0 THEN true ELSE false END
+            FROM Booking b
+            WHERE b.item.id = :itemId
+            AND b.status IN (:statuses)
+            AND ((b.start BETWEEN :start AND :end) OR
+            (b.end BETWEEN :start AND :end))
+            """)
+    boolean existsByItemIdAndDateRangeAndStateIn(
+            @Param("itemId") Integer itemId,
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end,
+            @Param("statuses") List<BookingStatus> statuses);
 }

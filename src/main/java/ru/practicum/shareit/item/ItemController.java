@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.comment.CommentService;
 import ru.practicum.shareit.comment.dto.CommentCreateDto;
 import ru.practicum.shareit.comment.dto.CommentResponseDto;
 import ru.practicum.shareit.item.dto.ItemCreateDto;
@@ -23,7 +22,6 @@ import static ru.practicum.shareit.ShareItConstants.REQ_HEAD_USER_ID;
 @RequiredArgsConstructor
 public class ItemController {
     private final ItemService itemService;
-    private final CommentService commentService;
 
     @GetMapping
     public List<ItemResponseDto> getItemsByUserId(
@@ -72,9 +70,6 @@ public class ItemController {
             @RequestHeader(REQ_HEAD_USER_ID) @Min(1) Integer userId,
             @PathVariable @Min(1) Integer itemId,
             @Valid @RequestBody CommentCreateDto commentCreateDto) {
-        commentCreateDto = new CommentCreateDto(
-                itemId,
-                commentCreateDto.text());
-        return commentService.createComment(userId, commentCreateDto);
+        return itemService.createComment(userId, itemId, commentCreateDto);
     }
 }

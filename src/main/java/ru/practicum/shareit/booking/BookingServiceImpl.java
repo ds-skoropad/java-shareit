@@ -41,14 +41,17 @@ public class BookingServiceImpl implements BookingService {
         if (userId.equals(item.getOwner().getId())) {
             throw new ValidationException("Can't booking your item");
         }
+        if (bookingRepository.existsByItemIdAndDateRangeAndStateIn(
+                bookingCreateDto.itemId(),
+                bookingCreateDto.start(),
+                bookingCreateDto.end(),
+                List.of(BookingStatus.APPROVED, BookingStatus.WAITING)
+        )) {
+            throw new ValidationException("Booking time in busy range");
+        }
 
-        Booking booking = new Booking();
-        booking.setStart(bookingCreateDto.start());
-        booking.setEnd(bookingCreateDto.end());
-        booking.setItem(item);
-        booking.setBooker(user);
-        booking.setStatus(BookingStatus.WAITING);
 
+        Booking booking = BookingMapper.toBooking(bookingCreateDto, item, user);
         Booking createBooking = bookingRepository.save(booking);
         log.info("Create booking: {}", createBooking);
 
@@ -62,6 +65,8 @@ public class BookingServiceImpl implements BookingService {
         if (!userId.equals(booking.getItem().getOwner().getId())) {
             throw new ForbiddenException("Only owners allowed");
         }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(String.format("User not found: id = %d", userId)));
         if (booking.getStatus() != BookingStatus.WAITING) {
             throw new ValidationException("Booking has already been processed");
         }
