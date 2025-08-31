@@ -46,7 +46,8 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
             WHERE b.item.id = :itemId
             AND b.status IN (:statuses)
             AND ((b.start BETWEEN :start AND :end) OR
-            (b.end BETWEEN :start AND :end))
+            (b.end BETWEEN :start AND :end) OR
+            (b.start <= :start AND b.end >= :end))
             """)
     boolean existsByItemIdAndDateRangeAndStateIn(
             @Param("itemId") Integer itemId,
