@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.comment.dto.CommentCreateDto;
+import ru.practicum.shareit.comment.dto.CommentResponseDto;
 import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemResponseDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
@@ -22,17 +24,16 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping
-    public List<ItemResponseDto> getAllItemsByUserId(
+    public List<ItemResponseDto> getItemsByUserId(
             @RequestHeader(REQ_HEAD_USER_ID) @Min(1) Integer userId) {
-        return itemService.getAllItemsByUserId(userId);
+        return itemService.getItemsByUserId(userId);
     }
 
     @GetMapping("/search")
-    public List<ItemResponseDto> getAllItemsByText(
+    public List<ItemResponseDto> getItemsByText(
             @RequestHeader(REQ_HEAD_USER_ID) @Min(1) Integer userId,
-            @RequestParam(defaultValue = "") String text
-    ) {
-        return itemService.getAllItemsByText(userId, text);
+            @RequestParam(defaultValue = "") String text) {
+        return itemService.getItemsByText(userId, text);
     }
 
     @GetMapping("/{itemId}")
@@ -63,11 +64,12 @@ public class ItemController {
         return itemService.updateItem(userId, itemUpdateDto);
     }
 
-    @DeleteMapping("/{itemId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteItemById(
+    @PostMapping("/{itemId}/comment")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CommentResponseDto createComment(
             @RequestHeader(REQ_HEAD_USER_ID) @Min(1) Integer userId,
-            @PathVariable @Min(1) Integer itemId) {
-        itemService.deleteItemById(userId, itemId);
+            @PathVariable @Min(1) Integer itemId,
+            @Valid @RequestBody CommentCreateDto commentCreateDto) {
+        return itemService.createComment(userId, itemId, commentCreateDto);
     }
 }

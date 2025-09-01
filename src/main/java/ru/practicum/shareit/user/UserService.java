@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface UserService {
 
-    List<UserResponseDto> getAllUsers();
+    List<UserResponseDto> getUsers();
 
     UserResponseDto getUserById(Integer userId);
 

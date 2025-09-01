@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
     private final ItemRepository itemRepository;
 
     @Override
-    public List<UserResponseDto> getAllUsers() {
+    public List<UserResponseDto> getUsers() {
         return userRepository.findAll().stream()
                 .map(UserMapper::toUserResponseDto)
                 .toList();
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUserById(Integer userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("User not found: id = %d", userId)));
-        itemRepository.deleteByUserId(userId);
+        itemRepository.deleteByOwnerId(userId);
         userRepository.deleteById(userId);
         log.info("Delete user: id = {}", userId);
     }
