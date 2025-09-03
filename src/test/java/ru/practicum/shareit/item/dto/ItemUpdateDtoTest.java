@@ -14,11 +14,12 @@ class ItemUpdateDtoTest {
     private static final String CORRECT_NAME = "Name";
     private static final String CORRECT_DESCRIPTION = "Description";
     private static final boolean CORRECT_AVAILABLE = true;
+    private static final Integer CORRECT_REQUEST_ID = 0;
     private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @Test
     void allCorrect() {
-        final ItemUpdateDto itemUpdateDto = new ItemUpdateDto(CORRECT_ID, CORRECT_NAME, CORRECT_DESCRIPTION, CORRECT_AVAILABLE);
+        final ItemUpdateDto itemUpdateDto = new ItemUpdateDto(CORRECT_ID, CORRECT_NAME, CORRECT_DESCRIPTION, CORRECT_AVAILABLE, CORRECT_REQUEST_ID);
         final Set<ConstraintViolation<ItemUpdateDto>> violations = validator.validate(itemUpdateDto);
 
         assertThat(violations.isEmpty()).isTrue();
@@ -26,7 +27,7 @@ class ItemUpdateDtoTest {
 
     @Test
     void allCorrectMayBeAllNull() {
-        final ItemUpdateDto itemUpdateDto = new ItemUpdateDto(null, null, null, null);
+        final ItemUpdateDto itemUpdateDto = new ItemUpdateDto(null, null, null, null, null);
         final Set<ConstraintViolation<ItemUpdateDto>> violations = validator.validate(itemUpdateDto);
 
         assertThat(violations.isEmpty()).isTrue();
@@ -34,7 +35,7 @@ class ItemUpdateDtoTest {
 
     @Test
     void notCorrectIdShouldBeNotNull() {
-        final ItemUpdateDto itemUpdateDto = new ItemUpdateDto(1, CORRECT_NAME, CORRECT_DESCRIPTION, CORRECT_AVAILABLE);
+        final ItemUpdateDto itemUpdateDto = new ItemUpdateDto(1, CORRECT_NAME, CORRECT_DESCRIPTION, CORRECT_AVAILABLE, CORRECT_REQUEST_ID);
         final Set<ConstraintViolation<ItemUpdateDto>> violations = validator.validate(itemUpdateDto);
 
         assertThat(violations).extracting("propertyPath").extracting(Object::toString).containsOnly("id");
@@ -42,7 +43,7 @@ class ItemUpdateDtoTest {
 
     @Test
     void notCorrectNameShouldBeBlank() {
-        final ItemUpdateDto itemUpdateDto = new ItemUpdateDto(CORRECT_ID, " ", CORRECT_DESCRIPTION, CORRECT_AVAILABLE);
+        final ItemUpdateDto itemUpdateDto = new ItemUpdateDto(CORRECT_ID, " ", CORRECT_DESCRIPTION, CORRECT_AVAILABLE, CORRECT_REQUEST_ID);
         final Set<ConstraintViolation<ItemUpdateDto>> violations = validator.validate(itemUpdateDto);
 
         assertThat(violations).extracting("propertyPath").extracting(Object::toString).containsOnly("name");
@@ -50,7 +51,7 @@ class ItemUpdateDtoTest {
 
     @Test
     void notCorrectDescriptionShouldBeBlank() {
-        final ItemUpdateDto itemUpdateDto = new ItemUpdateDto(CORRECT_ID, CORRECT_NAME, " ", CORRECT_AVAILABLE);
+        final ItemUpdateDto itemUpdateDto = new ItemUpdateDto(CORRECT_ID, CORRECT_NAME, " ", CORRECT_AVAILABLE, CORRECT_REQUEST_ID);
         final Set<ConstraintViolation<ItemUpdateDto>> violations = validator.validate(itemUpdateDto);
 
         assertThat(violations).extracting("propertyPath").extracting(Object::toString).containsOnly("description");

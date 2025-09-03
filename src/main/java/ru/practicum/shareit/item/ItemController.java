@@ -60,7 +60,8 @@ public class ItemController {
                 itemId,
                 itemUpdateDto.name(),
                 itemUpdateDto.description(),
-                itemUpdateDto.available());
+                itemUpdateDto.available(),
+                itemUpdateDto.requestId());
         return itemService.updateItem(userId, itemUpdateDto);
     }
 

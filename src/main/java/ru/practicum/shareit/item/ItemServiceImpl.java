@@ -18,6 +18,8 @@ import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemResponseDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
+import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.request.ItemRequestRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
@@ -35,6 +37,7 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+    private final ItemRequestRepository itemRequestRepository;
 
     @Override
     public List<ItemResponseDto> getItemsByUserId(Integer userId) {
@@ -71,7 +74,10 @@ public class ItemServiceImpl implements ItemService {
     public ItemResponseDto createItem(Integer userId, ItemCreateDto itemCreateDto) {
         User owner = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("User not found: id = %d", userId)));
-        Item createItem = itemRepository.save(ItemMapper.toItem(itemCreateDto, owner));
+        Integer requestId = itemCreateDto.requestId();
+        ItemRequest itemRequest = requestId == null ? null : itemRequestRepository.findById(requestId)
+                .orElseThrow(() -> new NotFoundException(String.format("ItemRequest not found: id = %d", requestId)));
+        Item createItem = itemRepository.save(ItemMapper.toItem(itemCreateDto, owner, itemRequest));
         log.info("Create item: {}", createItem);
         return ItemMapper.toItemResponseDto(createItem, null, null, List.of());
     }
@@ -85,7 +91,10 @@ public class ItemServiceImpl implements ItemService {
         if (!userId.equals(updateItem.getOwner().getId())) {
             throw new ForbiddenException("Only owners allowed");
         }
-        updateItem = ItemMapper.patchItem(updateItem, itemUpdateDto);
+        Integer requestId = itemUpdateDto.requestId();
+        ItemRequest itemRequest = requestId == null ? null : itemRequestRepository.findById(requestId)
+                .orElseThrow(() -> new NotFoundException(String.format("ItemRequest not found: id = %d", requestId)));
+        updateItem = ItemMapper.patchItem(updateItem, itemUpdateDto, itemRequest);
         updateItem = itemRepository.save(updateItem);
         log.info("Update item: {}", updateItem);
         return ItemMapper.toItemResponseDto(updateItem, null, null, List.of());

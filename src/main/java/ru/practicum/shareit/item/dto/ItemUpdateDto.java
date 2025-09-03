@@ -12,6 +12,7 @@ public record ItemUpdateDto(
         String name,
         @NullableNotBlank @Size(min = ItemConstants.DESCRIPTION_MIN_LENGTH, max = ItemConstants.DESCRIPTION_MAX_LENGTH)
         String description,
-        Boolean available
+        Boolean available,
+        Integer requestId
 ) {
 }

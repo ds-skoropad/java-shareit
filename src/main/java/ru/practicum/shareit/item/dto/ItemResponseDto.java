@@ -13,6 +13,7 @@ public record ItemResponseDto(
         Integer ownerId,
         BookingShortResponseDto lastBooking,
         BookingShortResponseDto nextBooking,
-        List<CommentResponseDto> comments
+        List<CommentResponseDto> comments,
+        Integer requestId
 ) {
 }
