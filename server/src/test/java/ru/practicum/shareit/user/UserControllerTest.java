@@ -48,7 +48,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$[0].id", is(id), Integer.class))
                 .andExpect(jsonPath("$[0].name", is(name)))
                 .andExpect(jsonPath("$[0].email", is(email)));
-        verify(userService, times(1)).getUsers();
+        verify(userService).getUsers();
     }
 
     @Test
@@ -60,7 +60,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.id", is(id), Integer.class))
                 .andExpect(jsonPath("$.name", is(name)))
                 .andExpect(jsonPath("$.email", is(email)));
-        verify(userService, times(1)).getUserById(anyInt());
+        verify(userService).getUserById(anyInt());
     }
 
     @Test
@@ -76,7 +76,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.id", is(id), Integer.class))
                 .andExpect(jsonPath("$.name", is(name)))
                 .andExpect(jsonPath("$.email", is(email)));
-        verify(userService, times(1)).createUser(any());
+        verify(userService).createUser(any());
     }
 
     @Test
@@ -92,7 +92,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.id", is(id), Integer.class))
                 .andExpect(jsonPath("$.name", is(name)))
                 .andExpect(jsonPath("$.email", is(email)));
-        verify(userService, times(1)).updateUser(any());
+        verify(userService).updateUser(any());
     }
 
     @Test
@@ -101,6 +101,6 @@ class UserControllerTest {
 
         mvc.perform(delete("/users/" + id))
                 .andExpect(status().isNoContent());
-        verify(userService, times(1)).deleteUserById(anyInt());
+        verify(userService).deleteUserById(anyInt());
     }
 }

@@ -47,7 +47,7 @@ class UserServiceImplTest {
                 .hasSize(1)
                 .first()
                 .isEqualTo(expectedUserResponseDto);
-        verify(userRepository, times(1)).findAll();
+        verify(userRepository).findAll();
     }
 
     @Test
@@ -57,7 +57,7 @@ class UserServiceImplTest {
 
         assertThat(userResponseDto)
                 .isEqualTo(expectedUserResponseDto);
-        verify(userRepository, times(1)).findById(anyInt());
+        verify(userRepository).findById(anyInt());
     }
 
     @Test
@@ -68,7 +68,7 @@ class UserServiceImplTest {
         assertThatThrownBy(() -> userService.getUserById(notFoundUserId))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("User not found");
-        verify(userRepository, times(1)).findById(anyInt());
+        verify(userRepository).findById(anyInt());
     }
 
     @Test
@@ -80,7 +80,7 @@ class UserServiceImplTest {
 
         assertThat(userResponseDto)
                 .isEqualTo(expectedUserResponseDto);
-        verify(userRepository, times(1)).save(any());
+        verify(userRepository).save(any());
     }
 
     @Test
@@ -93,8 +93,8 @@ class UserServiceImplTest {
 
         assertThat(userResponseDto)
                 .isEqualTo(expectedUserResponseDto);
-        verify(userRepository, times(1)).findById(anyInt());
-        verify(userRepository, times(1)).save(any());
+        verify(userRepository).findById(anyInt());
+        verify(userRepository).save(any());
     }
 
     @Test
@@ -106,7 +106,7 @@ class UserServiceImplTest {
         assertThatThrownBy(() -> userService.updateUser(userUpdateDto))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("User not found");
-        verify(userRepository, times(1)).findById(anyInt());
+        verify(userRepository).findById(anyInt());
         verify(userRepository, never()).save(any());
     }
 
@@ -116,8 +116,8 @@ class UserServiceImplTest {
         doNothing().when(userRepository).deleteById(id);
 
         userService.deleteUserById(id);
-        verify(userRepository, times(1)).findById(anyInt());
-        verify(userRepository, times(1)).deleteById(any());
+        verify(userRepository).findById(anyInt());
+        verify(userRepository).deleteById(any());
     }
 
     @Test
@@ -128,7 +128,7 @@ class UserServiceImplTest {
         assertThatThrownBy(() -> userService.deleteUserById(notFoundUserId))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("User not found");
-        verify(userRepository, times(1)).findById(anyInt());
+        verify(userRepository).findById(anyInt());
         verify(userRepository, never()).deleteById(any());
     }
 }

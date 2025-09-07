@@ -62,7 +62,7 @@ class ItemRequestControllerTest {
                 .andExpect(jsonPath("$.description", is(description)))
                 .andExpect(jsonPath("$.items[0].id", is(itemId)))
                 .andExpect(jsonPath("$.items[0].name", is(itemName)));
-        verify(itemRequestService, times(1)).createItemRequest(anyInt(), any());
+        verify(itemRequestService).createItemRequest(anyInt(), any());
     }
 
     @Test
@@ -76,7 +76,7 @@ class ItemRequestControllerTest {
                 .andExpect(jsonPath("$[0].description", is(description)))
                 .andExpect(jsonPath("$[0].items[0].id", is(itemId)))
                 .andExpect(jsonPath("$[0].items[0].name", is(itemName)));
-        verify(itemRequestService, times(1)).getItemRequestsByUserId(anyInt());
+        verify(itemRequestService).getItemRequestsByUserId(anyInt());
     }
 
     @Test
@@ -90,7 +90,7 @@ class ItemRequestControllerTest {
                 .andExpect(jsonPath("$[0].description", is(description)))
                 .andExpect(jsonPath("$[0].items[0].id", is(itemId)))
                 .andExpect(jsonPath("$[0].items[0].name", is(itemName)));
-        verify(itemRequestService, times(1)).getItemRequests(anyInt());
+        verify(itemRequestService).getItemRequests(anyInt());
     }
 
     @Test
@@ -104,6 +104,6 @@ class ItemRequestControllerTest {
                 .andExpect(jsonPath("$.description", is(description)))
                 .andExpect(jsonPath("$.items[0].id", is(itemId)))
                 .andExpect(jsonPath("$.items[0].name", is(itemName)));
-        verify(itemRequestService, times(1)).getItemRequestById(anyInt(), anyInt());
+        verify(itemRequestService).getItemRequestById(anyInt(), anyInt());
     }
 }

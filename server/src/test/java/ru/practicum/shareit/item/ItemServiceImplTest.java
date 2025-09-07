@@ -6,9 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
-import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.booking.dto.BookingShortResponseDto;
 import ru.practicum.shareit.comment.Comment;
 import ru.practicum.shareit.comment.CommentRepository;
@@ -59,7 +57,7 @@ class ItemServiceImplTest {
     private final String name = "name";
     private final String description = "test-description";
     private final String email = "email@domain.com";
-    private final LocalDateTime localDateTime = LocalDateTime.now();
+    private final LocalDateTime localDateTime = LocalDateTime.of(2025, 1, 1, 12, 0);
     private User user;
     private User owner;
     private Item item;
@@ -70,7 +68,6 @@ class ItemServiceImplTest {
     private ItemUpdateDto itemUpdateDto;
     private CommentCreateDto commentCreateDto;
 
-    private Booking booking;
     private ItemResponseDto expectedItemResponse;
     private CommentResponseDto expectedCommentResponse;
 
@@ -88,7 +85,6 @@ class ItemServiceImplTest {
         itemUpdateDto = new ItemUpdateDto(id, name, description, true, id);
         commentCreateDto = new CommentCreateDto(description);
 
-        booking = new Booking(id, localDateTime, localDateTime, item, user, BookingStatus.WAITING);
         BookingShortResponseDto bookingShort = new BookingShortResponseDto(id, localDateTime, localDateTime);
         CommentResponseDto commentResponseDto = new CommentResponseDto(id, description, name, localDateTime);
         expectedItemResponse = new ItemResponseDto(id, name, description, true, owner.getId(),
@@ -104,8 +100,8 @@ class ItemServiceImplTest {
 
         assertThat(result).first().isEqualTo(expectedItemResponse);
 
-        verify(userRepository, times(1)).findById(any());
-        verify(itemRepository, times(1)).findByOwnerId(any());
+        verify(userRepository).findById(any());
+        verify(itemRepository).findByOwnerId(any());
     }
 
     @Test
@@ -116,7 +112,7 @@ class ItemServiceImplTest {
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("User not found");
 
-        verify(userRepository, times(1)).findById(any());
+        verify(userRepository).findById(any());
         verify(itemRepository, never()).findByOwnerId(any());
     }
 
@@ -127,7 +123,7 @@ class ItemServiceImplTest {
 
         assertThat(result).first().isEqualTo(expectedItemResponse);
 
-        verify(itemRepository, times(1)).searchAvailableByText(any());
+        verify(itemRepository).searchAvailableByText(any());
     }
 
     @Test
@@ -149,8 +145,8 @@ class ItemServiceImplTest {
 
         assertThat(result).isEqualTo(expectedItemResponse);
 
-        verify(itemRepository, times(1)).findById(any());
-        verify(commentRepository, times(1)).findByItemId(any());
+        verify(itemRepository).findById(any());
+        verify(commentRepository).findByItemId(any());
     }
 
     @Test
@@ -161,7 +157,7 @@ class ItemServiceImplTest {
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("Item not found");
 
-        verify(itemRepository, times(1)).findById(any());
+        verify(itemRepository).findById(any());
         verify(commentRepository, never()).findByItemId(any());
     }
 
@@ -174,9 +170,9 @@ class ItemServiceImplTest {
 
         assertThat(result).isEqualTo(expectedItemResponse);
 
-        verify(userRepository, times(1)).findById(any());
-        verify(itemRequestRepository, times(1)).findById(any());
-        verify(itemRepository, times(1)).save(any());
+        verify(userRepository).findById(any());
+        verify(itemRequestRepository).findById(any());
+        verify(itemRepository).save(any());
     }
 
     @Test
@@ -187,7 +183,7 @@ class ItemServiceImplTest {
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("User not found");
 
-        verify(userRepository, times(1)).findById(any());
+        verify(userRepository).findById(any());
         verify(itemRequestRepository, never()).findById(any());
         verify(itemRepository, never()).save(any());
     }
@@ -201,8 +197,8 @@ class ItemServiceImplTest {
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("ItemRequest not found");
 
-        verify(userRepository, times(1)).findById(any());
-        verify(itemRequestRepository, times(1)).findById(any());
+        verify(userRepository).findById(any());
+        verify(itemRequestRepository).findById(any());
         verify(itemRepository, never()).save(any());
     }
 
@@ -217,9 +213,9 @@ class ItemServiceImplTest {
 
         assertThat(result).isEqualTo(expectedItemResponse);
 
-        verify(userRepository, times(1)).findById(any());
+        verify(userRepository).findById(any());
         verify(itemRequestRepository, never()).findById(any());
-        verify(itemRepository, times(1)).save(any());
+        verify(itemRepository).save(any());
     }
 
     @Test
@@ -232,10 +228,10 @@ class ItemServiceImplTest {
 
         assertThat(result).isEqualTo(expectedItemResponse);
 
-        verify(userRepository, times(1)).findById(any());
-        verify(itemRepository, times(1)).findById(any());
-        verify(itemRequestRepository, times(1)).findById(any());
-        verify(itemRepository, times(1)).save(any());
+        verify(userRepository).findById(any());
+        verify(itemRepository).findById(any());
+        verify(itemRequestRepository).findById(any());
+        verify(itemRepository).save(any());
     }
 
     @Test
@@ -246,7 +242,7 @@ class ItemServiceImplTest {
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("User not found");
 
-        verify(userRepository, times(1)).findById(any());
+        verify(userRepository).findById(any());
         verify(itemRepository, never()).findById(any());
         verify(itemRequestRepository, never()).findById(any());
         verify(itemRepository, never()).save(any());
@@ -261,8 +257,8 @@ class ItemServiceImplTest {
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("Item not found");
 
-        verify(userRepository, times(1)).findById(any());
-        verify(itemRepository, times(1)).findById(any());
+        verify(userRepository).findById(any());
+        verify(itemRepository).findById(any());
         verify(itemRequestRepository, never()).findById(any());
         verify(itemRepository, never()).save(any());
     }
@@ -277,9 +273,9 @@ class ItemServiceImplTest {
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("ItemRequest not found");
 
-        verify(userRepository, times(1)).findById(any());
-        verify(itemRepository, times(1)).findById(any());
-        verify(itemRequestRepository, times(1)).findById(any());
+        verify(userRepository).findById(any());
+        verify(itemRepository).findById(any());
+        verify(itemRequestRepository).findById(any());
         verify(itemRepository, never()).save(any());
     }
 
@@ -292,8 +288,8 @@ class ItemServiceImplTest {
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessageContaining("Only owners allowed");
 
-        verify(userRepository, times(1)).findById(any());
-        verify(itemRepository, times(1)).findById(any());
+        verify(userRepository).findById(any());
+        verify(itemRepository).findById(any());
         verify(itemRequestRepository, never()).findById(any());
         verify(itemRepository, never()).save(any());
     }
@@ -308,10 +304,10 @@ class ItemServiceImplTest {
 
         assertThat(result).isEqualTo(expectedCommentResponse);
 
-        verify(userRepository, times(1)).findById(any());
-        verify(itemRepository, times(1)).findById(any());
-        verify(bookingRepository, times(1)).existsByBookerIdAndItemIdAndEndBefore(anyInt(), anyInt(), any());
-        verify(commentRepository, times(1)).save(any());
+        verify(userRepository).findById(any());
+        verify(itemRepository).findById(any());
+        verify(bookingRepository).existsByBookerIdAndItemIdAndEndBefore(anyInt(), anyInt(), any());
+        verify(commentRepository).save(any());
     }
 
     @Test
@@ -322,7 +318,7 @@ class ItemServiceImplTest {
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("User not found");
 
-        verify(userRepository, times(1)).findById(any());
+        verify(userRepository).findById(any());
         verify(itemRepository, never()).findById(any());
         verify(bookingRepository, never()).existsByBookerIdAndItemIdAndEndBefore(anyInt(), anyInt(), any());
         verify(commentRepository, never()).save(any());
@@ -337,8 +333,8 @@ class ItemServiceImplTest {
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("Item not found");
 
-        verify(userRepository, times(1)).findById(any());
-        verify(itemRepository, times(1)).findById(any());
+        verify(userRepository).findById(any());
+        verify(itemRepository).findById(any());
         verify(bookingRepository, never()).existsByBookerIdAndItemIdAndEndBefore(anyInt(), anyInt(), any());
         verify(commentRepository, never()).save(any());
     }
@@ -353,9 +349,9 @@ class ItemServiceImplTest {
                 .isInstanceOf(NotValidException.class)
                 .hasMessageContaining("User not booking or booking not completed");
 
-        verify(userRepository, times(1)).findById(any());
-        verify(itemRepository, times(1)).findById(any());
-        verify(bookingRepository, times(1)).existsByBookerIdAndItemIdAndEndBefore(anyInt(), anyInt(), any());
+        verify(userRepository).findById(any());
+        verify(itemRepository).findById(any());
+        verify(bookingRepository).existsByBookerIdAndItemIdAndEndBefore(anyInt(), anyInt(), any());
         verify(commentRepository, never()).save(any());
     }
 }

@@ -37,7 +37,7 @@ class BookingControllerTest {
 
     private final Integer userId = 1;
     private final Integer id = 1;
-    private final LocalDateTime localDateTime = LocalDateTime.now();
+    private final LocalDateTime localDateTime = LocalDateTime.of(2025, 1, 1, 12, 0);
     private final BookingResponseDto bookingResponseDto = new BookingResponseDto(id, localDateTime, localDateTime, null, null, BookingStatus.WAITING);
 
     @Test
@@ -54,7 +54,7 @@ class BookingControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id", is(bookingResponseDto.id()), Integer.class))
                 .andExpect(jsonPath("$.status", is(bookingResponseDto.status().name())));
-        verify(bookingService, times(1)).createBooking(anyInt(), any());
+        verify(bookingService).createBooking(anyInt(), any());
     }
 
     @Test
@@ -67,7 +67,7 @@ class BookingControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(bookingResponseDto.id()), Integer.class))
                 .andExpect(jsonPath("$.status", is(bookingResponseDto.status().name())));
-        verify(bookingService, times(1)).updateBookingStatus(anyInt(), anyInt(), anyBoolean());
+        verify(bookingService).updateBookingStatus(anyInt(), anyInt(), anyBoolean());
     }
 
     @Test
@@ -79,11 +79,11 @@ class BookingControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(bookingResponseDto.id()), Integer.class))
                 .andExpect(jsonPath("$.status", is(bookingResponseDto.status().name())));
-        verify(bookingService, times(1)).getBookingById(anyInt(), anyInt());
+        verify(bookingService).getBookingById(anyInt(), anyInt());
     }
 
     @Test
-    void getBookingsByUserId() throws Exception {
+    void getBookingsByUserId_whenStateAll() throws Exception {
         when(bookingService.getBookingsByUserId(userId, BookingState.ALL)).thenReturn(List.of(bookingResponseDto));
 
         mvc.perform(get("/bookings")
@@ -92,7 +92,73 @@ class BookingControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id", is(bookingResponseDto.id()), Integer.class))
                 .andExpect(jsonPath("$[0].status", is(bookingResponseDto.status().name())));
-        verify(bookingService, times(1)).getBookingsByUserId(anyInt(), any());
+        verify(bookingService).getBookingsByUserId(anyInt(), any());
+    }
+
+    @Test
+    void getBookingsByUserId_whenStateCurrent() throws Exception {
+        when(bookingService.getBookingsByUserId(userId, BookingState.CURRENT)).thenReturn(List.of(bookingResponseDto));
+
+        mvc.perform(get("/bookings")
+                        .header(REQ_HEAD_USER_ID, userId)
+                        .param("state", BookingState.CURRENT.name()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id", is(bookingResponseDto.id()), Integer.class))
+                .andExpect(jsonPath("$[0].status", is(bookingResponseDto.status().name())));
+        verify(bookingService).getBookingsByUserId(anyInt(), any());
+    }
+
+    @Test
+    void getBookingsByUserId_whenStatePast() throws Exception {
+        when(bookingService.getBookingsByUserId(userId, BookingState.PAST)).thenReturn(List.of(bookingResponseDto));
+
+        mvc.perform(get("/bookings")
+                        .header(REQ_HEAD_USER_ID, userId)
+                        .param("state", BookingState.PAST.name()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id", is(bookingResponseDto.id()), Integer.class))
+                .andExpect(jsonPath("$[0].status", is(bookingResponseDto.status().name())));
+        verify(bookingService).getBookingsByUserId(anyInt(), any());
+    }
+
+    @Test
+    void getBookingsByUserId_whenStateFuture() throws Exception {
+        when(bookingService.getBookingsByUserId(userId, BookingState.FUTURE)).thenReturn(List.of(bookingResponseDto));
+
+        mvc.perform(get("/bookings")
+                        .header(REQ_HEAD_USER_ID, userId)
+                        .param("state", BookingState.FUTURE.name()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id", is(bookingResponseDto.id()), Integer.class))
+                .andExpect(jsonPath("$[0].status", is(bookingResponseDto.status().name())));
+        verify(bookingService).getBookingsByUserId(anyInt(), any());
+    }
+
+
+    @Test
+    void getBookingsByUserId_whenStateWaiting() throws Exception {
+        when(bookingService.getBookingsByUserId(userId, BookingState.WAITING)).thenReturn(List.of(bookingResponseDto));
+
+        mvc.perform(get("/bookings")
+                        .header(REQ_HEAD_USER_ID, userId)
+                        .param("state", BookingState.WAITING.name()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id", is(bookingResponseDto.id()), Integer.class))
+                .andExpect(jsonPath("$[0].status", is(bookingResponseDto.status().name())));
+        verify(bookingService).getBookingsByUserId(anyInt(), any());
+    }
+
+    @Test
+    void getBookingsByUserId_whenStateRejected() throws Exception {
+        when(bookingService.getBookingsByUserId(userId, BookingState.REJECTED)).thenReturn(List.of(bookingResponseDto));
+
+        mvc.perform(get("/bookings")
+                        .header(REQ_HEAD_USER_ID, userId)
+                        .param("state", BookingState.REJECTED.name()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id", is(bookingResponseDto.id()), Integer.class))
+                .andExpect(jsonPath("$[0].status", is(bookingResponseDto.status().name())));
+        verify(bookingService).getBookingsByUserId(anyInt(), any());
     }
 
     @Test
@@ -105,6 +171,6 @@ class BookingControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id", is(bookingResponseDto.id()), Integer.class))
                 .andExpect(jsonPath("$[0].status", is(bookingResponseDto.status().name())));
-        verify(bookingService, times(1)).getBookingsByOwnerId(anyInt(), any());
+        verify(bookingService).getBookingsByOwnerId(anyInt(), any());
     }
 }

@@ -21,7 +21,7 @@ class BookingMapperTest {
     private final String name = "test-name";
     private final String description = "test-description";
     private final String email = "test-email@domain.com";
-    private final LocalDateTime localDateTime = LocalDateTime.now();
+    private final LocalDateTime localDateTime = LocalDateTime.of(2025, 1, 1, 12, 0);
 
     private User user;
     private Item item;

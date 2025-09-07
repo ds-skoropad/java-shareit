@@ -47,7 +47,7 @@ class BookingServiceImplTest {
     private final String name = "name";
     private final String description = "test-description";
     private final String email = "email@domain.com";
-    private final LocalDateTime localDateTime = LocalDateTime.now();
+    private final LocalDateTime localDateTime = LocalDateTime.of(2025, 1, 1, 12, 0);
     private User user;
     private User owner;
     private Item item;
@@ -76,10 +76,10 @@ class BookingServiceImplTest {
 
         assertThat(result).isEqualTo(expected);
 
-        verify(userRepository, times(1)).findById(any());
-        verify(itemRepository, times(1)).findById(any());
-        verify(bookingRepository, times(1)).existsByItemIdAndDateRangeAndStateIn(anyInt(), any(), any(), anyList());
-        verify(bookingRepository, times(1)).save(any());
+        verify(userRepository).findById(any());
+        verify(itemRepository).findById(any());
+        verify(bookingRepository).existsByItemIdAndDateRangeAndStateIn(anyInt(), any(), any(), anyList());
+        verify(bookingRepository).save(any());
     }
 
     @Test
@@ -105,7 +105,7 @@ class BookingServiceImplTest {
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("User not found");
 
-        verify(userRepository, times(1)).findById(any());
+        verify(userRepository).findById(any());
         verify(itemRepository, never()).findById(any());
         verify(bookingRepository, never()).existsByItemIdAndDateRangeAndStateIn(anyInt(), any(), any(), anyList());
         verify(bookingRepository, never()).save(any());
@@ -121,8 +121,8 @@ class BookingServiceImplTest {
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("Item not found");
 
-        verify(userRepository, times(1)).findById(any());
-        verify(itemRepository, times(1)).findById(any());
+        verify(userRepository).findById(any());
+        verify(itemRepository).findById(any());
         verify(bookingRepository, never()).existsByItemIdAndDateRangeAndStateIn(anyInt(), any(), any(), anyList());
         verify(bookingRepository, never()).save(any());
     }
@@ -138,8 +138,8 @@ class BookingServiceImplTest {
                 .isInstanceOf(NotValidException.class)
                 .hasMessageContaining("Item not available for booking");
 
-        verify(userRepository, times(1)).findById(any());
-        verify(itemRepository, times(1)).findById(any());
+        verify(userRepository).findById(any());
+        verify(itemRepository).findById(any());
         verify(bookingRepository, never()).existsByItemIdAndDateRangeAndStateIn(anyInt(), any(), any(), anyList());
         verify(bookingRepository, never()).save(any());
     }
@@ -155,8 +155,8 @@ class BookingServiceImplTest {
                 .isInstanceOf(NotValidException.class)
                 .hasMessageContaining("Can't booking your item");
 
-        verify(userRepository, times(1)).findById(any());
-        verify(itemRepository, times(1)).findById(any());
+        verify(userRepository).findById(any());
+        verify(itemRepository).findById(any());
         verify(bookingRepository, never()).existsByItemIdAndDateRangeAndStateIn(anyInt(), any(), any(), anyList());
         verify(bookingRepository, never()).save(any());
     }
@@ -172,9 +172,9 @@ class BookingServiceImplTest {
                 .isInstanceOf(NotValidException.class)
                 .hasMessageContaining("Booking time in busy range");
 
-        verify(userRepository, times(1)).findById(any());
-        verify(itemRepository, times(1)).findById(any());
-        verify(bookingRepository, times(1)).existsByItemIdAndDateRangeAndStateIn(anyInt(), any(), any(), anyList());
+        verify(userRepository).findById(any());
+        verify(itemRepository).findById(any());
+        verify(bookingRepository).existsByItemIdAndDateRangeAndStateIn(anyInt(), any(), any(), anyList());
         verify(bookingRepository, never()).save(any());
     }
 
@@ -190,9 +190,9 @@ class BookingServiceImplTest {
 
         assertThat(result).isEqualTo(expected);
 
-        verify(bookingRepository, times(1)).findById(any());
-        verify(userRepository, times(1)).findById(any());
-        verify(bookingRepository, times(1)).save(any());
+        verify(bookingRepository).findById(any());
+        verify(userRepository).findById(any());
+        verify(bookingRepository).save(any());
     }
 
     @Test
@@ -207,9 +207,9 @@ class BookingServiceImplTest {
 
         assertThat(result).isEqualTo(expected);
 
-        verify(bookingRepository, times(1)).findById(any());
-        verify(userRepository, times(1)).findById(any());
-        verify(bookingRepository, times(1)).save(any());
+        verify(bookingRepository).findById(any());
+        verify(userRepository).findById(any());
+        verify(bookingRepository).save(any());
     }
 
     @Test
@@ -220,7 +220,7 @@ class BookingServiceImplTest {
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("Booking not found");
 
-        verify(bookingRepository, times(1)).findById(any());
+        verify(bookingRepository).findById(any());
         verify(userRepository, never()).findById(any());
         verify(bookingRepository, never()).save(any());
     }
@@ -233,7 +233,7 @@ class BookingServiceImplTest {
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessageContaining("Only owners allowed");
 
-        verify(bookingRepository, times(1)).findById(any());
+        verify(bookingRepository).findById(any());
         verify(userRepository, never()).findById(any());
         verify(bookingRepository, never()).save(any());
     }
@@ -247,8 +247,8 @@ class BookingServiceImplTest {
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("User not found");
 
-        verify(bookingRepository, times(1)).findById(any());
-        verify(userRepository, times(1)).findById(any());
+        verify(bookingRepository).findById(any());
+        verify(userRepository).findById(any());
         verify(bookingRepository, never()).save(any());
     }
 
@@ -262,8 +262,8 @@ class BookingServiceImplTest {
                 .isInstanceOf(NotValidException.class)
                 .hasMessageContaining("Booking has already been processed");
 
-        verify(bookingRepository, times(1)).findById(any());
-        verify(userRepository, times(1)).findById(any());
+        verify(bookingRepository).findById(any());
+        verify(userRepository).findById(any());
         verify(bookingRepository, never()).save(any());
     }
 
@@ -275,8 +275,8 @@ class BookingServiceImplTest {
 
         assertThat(result).isEqualTo(expected);
 
-        verify(userRepository, times(1)).findById(any());
-        verify(bookingRepository, times(1)).findById(any());
+        verify(userRepository).findById(any());
+        verify(bookingRepository).findById(any());
     }
 
     @Test
@@ -287,7 +287,7 @@ class BookingServiceImplTest {
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("User not found");
 
-        verify(userRepository, times(1)).findById(any());
+        verify(userRepository).findById(any());
         verify(bookingRepository, never()).findById(any());
     }
 
@@ -300,8 +300,8 @@ class BookingServiceImplTest {
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("Booking not found");
 
-        verify(userRepository, times(1)).findById(any());
-        verify(bookingRepository, times(1)).findById(any());
+        verify(userRepository).findById(any());
+        verify(bookingRepository).findById(any());
     }
 
     @Test
@@ -314,8 +314,8 @@ class BookingServiceImplTest {
                 .isInstanceOf(ForbiddenException.class)
                 .hasMessageContaining("Only owners allowed");
 
-        verify(userRepository, times(1)).findById(any());
-        verify(bookingRepository, times(1)).findById(any());
+        verify(userRepository).findById(any());
+        verify(bookingRepository).findById(any());
     }
 
     @Test
@@ -326,7 +326,7 @@ class BookingServiceImplTest {
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("User not found");
 
-        verify(userRepository, times(1)).findById(any());
+        verify(userRepository).findById(any());
         verify(bookingRepository, never()).findByBookerIdOrderByStartDesc(any());
     }
 
@@ -338,8 +338,8 @@ class BookingServiceImplTest {
 
         assertThat(result).first().isEqualTo(expected);
 
-        verify(userRepository, times(1)).findById(any());
-        verify(bookingRepository, times(1)).findByBookerIdOrderByStartDesc(any());
+        verify(userRepository).findById(any());
+        verify(bookingRepository).findByBookerIdOrderByStartDesc(any());
     }
 
     @Test
@@ -350,8 +350,8 @@ class BookingServiceImplTest {
 
         assertThat(result).first().isEqualTo(expected);
 
-        verify(userRepository, times(1)).findById(any());
-        verify(bookingRepository, times(1)).findByBookerIdAndStartBeforeAndEndAfterOrderByStartDesc(any(), any(), any());
+        verify(userRepository).findById(any());
+        verify(bookingRepository).findByBookerIdAndStartBeforeAndEndAfterOrderByStartDesc(any(), any(), any());
     }
 
     @Test
@@ -362,8 +362,8 @@ class BookingServiceImplTest {
 
         assertThat(result).first().isEqualTo(expected);
 
-        verify(userRepository, times(1)).findById(any());
-        verify(bookingRepository, times(1)).findByBookerIdAndEndBeforeOrderByStartDesc(any(), any());
+        verify(userRepository).findById(any());
+        verify(bookingRepository).findByBookerIdAndEndBeforeOrderByStartDesc(any(), any());
     }
 
 
@@ -375,8 +375,8 @@ class BookingServiceImplTest {
 
         assertThat(result).first().isEqualTo(expected);
 
-        verify(userRepository, times(1)).findById(any());
-        verify(bookingRepository, times(1)).findByBookerIdAndStartAfterOrderByStartDesc(any(), any());
+        verify(userRepository).findById(any());
+        verify(bookingRepository).findByBookerIdAndStartAfterOrderByStartDesc(any(), any());
     }
 
     @Test
@@ -387,8 +387,8 @@ class BookingServiceImplTest {
 
         assertThat(result).first().isEqualTo(expected);
 
-        verify(userRepository, times(1)).findById(any());
-        verify(bookingRepository, times(1)).findByBookerIdAndStatusOrderByStartDesc(any(), any());
+        verify(userRepository).findById(any());
+        verify(bookingRepository).findByBookerIdAndStatusOrderByStartDesc(any(), any());
     }
 
     @Test
@@ -399,8 +399,8 @@ class BookingServiceImplTest {
 
         assertThat(result).first().isEqualTo(expected);
 
-        verify(userRepository, times(1)).findById(any());
-        verify(bookingRepository, times(1)).findByBookerIdAndStatusOrderByStartDesc(any(), any());
+        verify(userRepository).findById(any());
+        verify(bookingRepository).findByBookerIdAndStatusOrderByStartDesc(any(), any());
     }
 
 
@@ -412,7 +412,7 @@ class BookingServiceImplTest {
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("User not found");
 
-        verify(userRepository, times(1)).findById(any());
+        verify(userRepository).findById(any());
         verify(bookingRepository, never()).findByItemOwnerIdOrderByStartDesc(any());
     }
 
@@ -424,8 +424,8 @@ class BookingServiceImplTest {
 
         assertThat(result).first().isEqualTo(expected);
 
-        verify(userRepository, times(1)).findById(any());
-        verify(bookingRepository, times(1)).findByItemOwnerIdOrderByStartDesc(any());
+        verify(userRepository).findById(any());
+        verify(bookingRepository).findByItemOwnerIdOrderByStartDesc(any());
     }
 
     @Test
@@ -436,8 +436,8 @@ class BookingServiceImplTest {
 
         assertThat(result).first().isEqualTo(expected);
 
-        verify(userRepository, times(1)).findById(any());
-        verify(bookingRepository, times(1)).findByItemOwnerIdAndStartBeforeAndEndAfterOrderByStartDesc(any(), any(), any());
+        verify(userRepository).findById(any());
+        verify(bookingRepository).findByItemOwnerIdAndStartBeforeAndEndAfterOrderByStartDesc(any(), any(), any());
     }
 
     @Test
@@ -448,8 +448,8 @@ class BookingServiceImplTest {
 
         assertThat(result).first().isEqualTo(expected);
 
-        verify(userRepository, times(1)).findById(any());
-        verify(bookingRepository, times(1)).findByItemOwnerIdAndEndBeforeOrderByStartDesc(any(), any());
+        verify(userRepository).findById(any());
+        verify(bookingRepository).findByItemOwnerIdAndEndBeforeOrderByStartDesc(any(), any());
     }
 
 
@@ -461,8 +461,8 @@ class BookingServiceImplTest {
 
         assertThat(result).first().isEqualTo(expected);
 
-        verify(userRepository, times(1)).findById(any());
-        verify(bookingRepository, times(1)).findByItemOwnerIdAndStartAfterOrderByStartDesc(any(), any());
+        verify(userRepository).findById(any());
+        verify(bookingRepository).findByItemOwnerIdAndStartAfterOrderByStartDesc(any(), any());
     }
 
     @Test
@@ -473,8 +473,8 @@ class BookingServiceImplTest {
 
         assertThat(result).first().isEqualTo(expected);
 
-        verify(userRepository, times(1)).findById(any());
-        verify(bookingRepository, times(1)).findByItemOwnerIdAndStatusOrderByStartDesc(any(), any());
+        verify(userRepository).findById(any());
+        verify(bookingRepository).findByItemOwnerIdAndStatusOrderByStartDesc(any(), any());
     }
 
     @Test
@@ -485,7 +485,7 @@ class BookingServiceImplTest {
 
         assertThat(result).first().isEqualTo(expected);
 
-        verify(userRepository, times(1)).findById(any());
-        verify(bookingRepository, times(1)).findByItemOwnerIdAndStatusOrderByStartDesc(any(), any());
+        verify(userRepository).findById(any());
+        verify(bookingRepository).findByItemOwnerIdAndStatusOrderByStartDesc(any(), any());
     }
 }

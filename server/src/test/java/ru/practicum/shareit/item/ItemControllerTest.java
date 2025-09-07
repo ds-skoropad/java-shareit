@@ -41,10 +41,11 @@ class ItemControllerTest {
     private final Integer userId = 1;
     private final String name = "test-name";
     private final String description = "test-description";
+    private final LocalDateTime localDateTime = LocalDateTime.of(2025, 1, 1, 12, 0);
     private final ItemResponseDto itemResponseDto = new ItemResponseDto(id, name, description, true, id, null, null, null, id);
 
     private final String text = "test-text";
-    private final CommentResponseDto commentResponseDto = new CommentResponseDto(id, text, name, LocalDateTime.now());
+    private final CommentResponseDto commentResponseDto = new CommentResponseDto(id, text, name, localDateTime);
 
     @Test
     void getItemsByUserId() throws Exception {
@@ -56,7 +57,7 @@ class ItemControllerTest {
                 .andExpect(jsonPath("$[0].id", is(itemResponseDto.id()), Integer.class))
                 .andExpect(jsonPath("$[0].name", is(itemResponseDto.name())))
                 .andExpect(jsonPath("$[0].description", is(itemResponseDto.description())));
-        verify(itemService, times(1)).getItemsByUserId(anyInt());
+        verify(itemService).getItemsByUserId(anyInt());
     }
 
     @Test
@@ -71,7 +72,7 @@ class ItemControllerTest {
                 .andExpect(jsonPath("$[0].id", is(itemResponseDto.id()), Integer.class))
                 .andExpect(jsonPath("$[0].name", is(itemResponseDto.name())))
                 .andExpect(jsonPath("$[0].description", is(itemResponseDto.description())));
-        verify(itemService, times(1)).getItemsByText(anyInt(), anyString());
+        verify(itemService).getItemsByText(anyInt(), anyString());
     }
 
     @Test
@@ -84,7 +85,7 @@ class ItemControllerTest {
                 .andExpect(jsonPath("$.id", is(itemResponseDto.id()), Integer.class))
                 .andExpect(jsonPath("$.name", is(itemResponseDto.name())))
                 .andExpect(jsonPath("$.description", is(itemResponseDto.description())));
-        verify(itemService, times(1)).getItemById(anyInt(), anyInt());
+        verify(itemService).getItemById(anyInt(), anyInt());
     }
 
     @Test
@@ -102,7 +103,7 @@ class ItemControllerTest {
                 .andExpect(jsonPath("$.id", is(itemResponseDto.id()), Integer.class))
                 .andExpect(jsonPath("$.name", is(itemResponseDto.name())))
                 .andExpect(jsonPath("$.description", is(itemResponseDto.description())));
-        verify(itemService, times(1)).createItem(anyInt(), any());
+        verify(itemService).createItem(anyInt(), any());
     }
 
     @Test
@@ -120,7 +121,7 @@ class ItemControllerTest {
                 .andExpect(jsonPath("$.id", is(itemResponseDto.id()), Integer.class))
                 .andExpect(jsonPath("$.name", is(itemResponseDto.name())))
                 .andExpect(jsonPath("$.description", is(itemResponseDto.description())));
-        verify(itemService, times(1)).updateItem(anyInt(), any());
+        verify(itemService).updateItem(anyInt(), any());
     }
 
     @Test
@@ -138,6 +139,6 @@ class ItemControllerTest {
                 .andExpect(jsonPath("$.id", is(commentResponseDto.id()), Integer.class))
                 .andExpect(jsonPath("$.text", is(commentResponseDto.text())))
                 .andExpect(jsonPath("$.authorName", is(commentResponseDto.authorName())));
-        verify(itemService, times(1)).createComment(anyInt(), anyInt(), any());
+        verify(itemService).createComment(anyInt(), anyInt(), any());
     }
 }

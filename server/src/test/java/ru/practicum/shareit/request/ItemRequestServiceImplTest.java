@@ -33,7 +33,7 @@ class ItemRequestServiceImplTest {
     @InjectMocks
     private ItemRequestServiceImpl itemRequestService;
 
-    private final LocalDateTime localDateTime = LocalDateTime.now();
+    private final LocalDateTime localDateTime = LocalDateTime.of(2025, 1, 1, 12, 0);
     private User user;
     private ItemRequest itemRequest;
     private ItemRequestCreateDto itemRequestCreateDto;
@@ -60,8 +60,8 @@ class ItemRequestServiceImplTest {
                 .hasFieldOrPropertyWithValue("id", itemRequest.getId())
                 .hasFieldOrPropertyWithValue("description", itemRequest.getDescription())
                 .hasFieldOrPropertyWithValue("created", itemRequest.getCreated());
-        verify(userRepository, times(1)).findById(any());
-        verify(itemRequestRepository, times(1)).save(any());
+        verify(userRepository).findById(any());
+        verify(itemRequestRepository).save(any());
     }
 
     @Test
@@ -71,7 +71,7 @@ class ItemRequestServiceImplTest {
         assertThatThrownBy(() -> itemRequestService.createItemRequest(user.getId(), itemRequestCreateDto))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("User not found");
-        verify(userRepository, times(1)).findById(any());
+        verify(userRepository).findById(any());
         verify(itemRequestRepository, never()).save(any());
     }
 
@@ -86,8 +86,8 @@ class ItemRequestServiceImplTest {
                 .hasFieldOrPropertyWithValue("id", itemRequest.getId())
                 .hasFieldOrPropertyWithValue("description", itemRequest.getDescription())
                 .hasFieldOrPropertyWithValue("created", itemRequest.getCreated());
-        verify(userRepository, times(1)).findById(any());
-        verify(itemRequestRepository, times(1)).findByRequestorIdOrderByCreatedDesc(any());
+        verify(userRepository).findById(any());
+        verify(itemRequestRepository).findByRequestorIdOrderByCreatedDesc(any());
 
     }
 
@@ -98,7 +98,7 @@ class ItemRequestServiceImplTest {
         assertThatThrownBy(() -> itemRequestService.getItemRequestsByUserId(user.getId()))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("User not found");
-        verify(userRepository, times(1)).findById(any());
+        verify(userRepository).findById(any());
         verify(itemRequestRepository, never()).findByRequestorIdOrderByCreatedDesc(any());
     }
 
@@ -113,8 +113,8 @@ class ItemRequestServiceImplTest {
                 .hasFieldOrPropertyWithValue("id", itemRequest.getId())
                 .hasFieldOrPropertyWithValue("description", itemRequest.getDescription())
                 .hasFieldOrPropertyWithValue("created", itemRequest.getCreated());
-        verify(userRepository, times(1)).findById(any());
-        verify(itemRequestRepository, times(1)).findByRequestorIdNotOrderByCreatedDesc(any());
+        verify(userRepository).findById(any());
+        verify(itemRequestRepository).findByRequestorIdNotOrderByCreatedDesc(any());
     }
 
     @Test
@@ -124,7 +124,7 @@ class ItemRequestServiceImplTest {
         assertThatThrownBy(() -> itemRequestService.getItemRequests(user.getId()))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("User not found");
-        verify(userRepository, times(1)).findById(any());
+        verify(userRepository).findById(any());
         verify(itemRequestRepository, never()).findByRequestorIdNotOrderByCreatedDesc(any());
     }
 
@@ -138,8 +138,8 @@ class ItemRequestServiceImplTest {
                 .hasFieldOrPropertyWithValue("id", itemRequest.getId())
                 .hasFieldOrPropertyWithValue("description", itemRequest.getDescription())
                 .hasFieldOrPropertyWithValue("created", itemRequest.getCreated());
-        verify(userRepository, times(1)).findById(any());
-        verify(itemRequestRepository, times(1)).findById(any());
+        verify(userRepository).findById(any());
+        verify(itemRequestRepository).findById(any());
     }
 
     @Test
@@ -149,7 +149,7 @@ class ItemRequestServiceImplTest {
         assertThatThrownBy(() -> itemRequestService.getItemRequestById(user.getId(), itemRequest.getId()))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("User not found");
-        verify(userRepository, times(1)).findById(any());
+        verify(userRepository).findById(any());
         verify(itemRequestRepository, never()).findById(any());
     }
 
@@ -161,7 +161,7 @@ class ItemRequestServiceImplTest {
         assertThatThrownBy(() -> itemRequestService.getItemRequestById(user.getId(), itemRequest.getId()))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("ItemRequest not found");
-        verify(userRepository, times(1)).findById(any());
-        verify(itemRequestRepository, times(1)).findById(any());
+        verify(userRepository).findById(any());
+        verify(itemRequestRepository).findById(any());
     }
 }
